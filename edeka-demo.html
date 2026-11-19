@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edeka Wochen-Knaller • Live-Spar-Check</title>
+  <style>
+    :root {
+      --primary: #00509e;
+      --primary-dark: #003366;
+      --brand-yellow: #ffed00;
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --text-light: #ffffff;
+      --text-muted: #94a3b8;
+      --accent-green: #22c55e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: var(--bg-dark); color: var(--text-light); min-height: 100vh; }
+
+    #start-screen {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, var(--primary), var(--primary-dark));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .brand-badge {
+      width: 90px;
+      height: 90px;
+      background: var(--brand-yellow);
+      color: var(--primary-dark);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 900;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      margin-bottom: 1.5rem;
+    }
+
+    .sub-label {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--brand-yellow);
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+    }
+
+    #hero-title { font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; }
+    #hero-subtitle { font-size: 1.05rem; opacity: 0.92; max-width: 520px; margin-bottom: 2rem; }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.5rem;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 237, 0, 0.35);
+      border-radius: 16px;
+      padding: 1.2rem 2rem;
+      margin-bottom: 2.2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .stat-box { min-width: 130px; }
+    .stat-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
+    .stat-value { font-size: 1.25rem; font-weight: 800; margin-top: 0.25rem; color: var(--brand-yellow); }
+
+    .enter-btn {
+      background: var(--brand-yellow);
+      color: var(--primary-dark);
+      border: none;
+      padding: 1rem 2.4rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+    .enter-btn:hover { transform: translateY(-2px); }
+
+    #board-screen { display: none; max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .controls { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    .btn {
+      background: var(--card-bg);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 0.6rem 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .btn.active { background: var(--primary); border-color: var(--brand-yellow); color: var(--brand-yellow); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.2rem;
+    }
+
+    .card.rank-1 {
+      border: 2px solid var(--brand-yellow);
+      background: linear-gradient(145deg, #1e3a5f, #1e293b);
+      box-shadow: 0 8px 25px rgba(255, 237, 0, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .rank-badge {
+      background: rgba(255,255,255,0.12);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .card.rank-1 .rank-badge { background: var(--brand-yellow); color: var(--primary-dark); }
+
+    .category-tag { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+    .item-name { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+
+    .price-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .price-input {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.22);
+      color: var(--brand-yellow);
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 0.35rem 0.6rem;
+      border-radius: 8px;
+      width: 120px;
+    }
+
+    .base-price { font-size: 0.8rem; color: var(--text-muted); }
+
+    .buy-btn {
+      display: block;
+      width: 100%;
+      margin-top: 0.9rem;
+      padding: 0.75rem;
+      background: var(--accent-green);
+      color: #052e16;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 800;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+  <section id="start-screen">
+    <div class="brand-badge">🛒</div>
+    <div class="sub-label">FRISCHE-MARKT • WOCHEN-KNALLER</div>
+    <h1 id="hero-title">KAFFEE & GENUSS SPAR-CHECK</h1>
+    <p id="hero-subtitle">Alle Wochen-Angebote im Markt vergleichen, App-Coupon einrechnen & den Top-Deal direkt sichern.</p>
+
+    <div class="stats-bar">
+      <div class="stat-box">
+        <div class="stat-label" id="stat1-label">Günstigster Knaller</div>
+        <div class="stat-value" id="stat1-value">-</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Aktions-Artikel</div>
+        <div class="stat-value" id="stat2-value">-</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Gültig</div>
+        <div class="stat-value">Diese Woche</div>
+      </div>
+    </div>
+
+    <button class="enter-btn" onclick="openBoard()">Angebote vergleichen →</button>
+  </section>
+
+  <section id="board-screen">
+    <div class="top-bar">
+      <div>
+        <h2>Wochen-Angebote Live-Ranking</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Tipp: Zieh deinen App-Gutschein (z. B. 1,50 €) ab – der günstigste Deal springt sofort auf Platz #1.</p>
+      </div>
+      <div class="controls">
+        <button class="btn active" id="sort-asc" onclick="setSort('asc')">Günstigster oben ↑</button>
+        <button class="btn" id="sort-desc" onclick="setSort('desc')">Premium-Marke oben ↓</button>
+        <button class="btn" onclick="resetPrices()">↻ Prospektpreise</button>
+        <button class="btn" onclick="closeBoard()">← Startseite</button>
+      </div>
+    </div>
+
+    <div class="grid" id="cards-grid"></div>
+  </section>
+
+  <script>
+    const CONFIG = {
+      currency: "€",
+      buyButtonText: "Jetzt im Markt sichern / Vorbestellen →",
+      items: [
+        { id: 1, name: "Jacobs Krönung 500g", tag: "Gemahlen • Klassik", basePrice: 4.99, url: "#deal-1" },
+        { id: 2, name: "Lavazza Caffè Crema 1kg", tag: "Ganze Bohne", basePrice: 11.49, url: "#deal-2" },
+        { id: 3, name: "Melitta Auslese 500g", tag: "Vakuumverpackt", basePrice: 4.49, url: "#deal-3" },
+        { id: 4, name: "Dallmayr Prodomo 500g", tag: "100% Arabica", basePrice: 5.79, url: "#deal-4" },
+        { id: 5, name: "Tchibo Feine Milde 500g", tag: "2x 250g Packung", basePrice: 5.29, url: "#deal-5" },
+        { id: 6, name: "Mövenpick Der Himmlische", tag: "500g Packung", basePrice: 4.79, url: "#deal-6" }
+      ]
+    };
+
+    let sortMode = 'asc';
+    let currentItems = CONFIG.items.map(item => ({ ...item, currentPrice: item.basePrice }));
+
+    function openBoard() {
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('board-screen').style.display = 'block';
+    }
+
+    function closeBoard() {
+      document.getElementById('board-screen').style.display = 'none';
+      document.getElementById('start-screen').style.display = 'flex';
+    }
+
+    function setSort(mode) {
+      sortMode = mode;
+      document.getElementById('sort-asc').classList.toggle('active', mode === 'asc');
+      document.getElementById('sort-desc').classList.toggle('active', mode === 'desc');
+      updateBoard();
+    }
+
+    function updatePrice(id, newValue) {
+      const val = parseFloat(newValue);
+      if (!isNaN(val) && val >= 0) {
+        const target = currentItems.find(i => i.id === id);
+        if (target) target.currentPrice = val;
+        updateBoard();
+      }
+    }
+
+    function resetPrices() {
+      currentItems.forEach(item => item.currentPrice = item.basePrice);
+      updateBoard();
+    }
+
+    function updateBoard() {
+      currentItems.sort((a, b) => sortMode === 'asc'
+        ? a.currentPrice - b.currentPrice
+        : b.currentPrice - a.currentPrice
+      );
+
+      const topItem = currentItems;
+      document.getElementById('stat1-label').textContent = sortMode === 'asc' ? 'Günstigster Preis' : 'Top-Marke';
+      document.getElementById('stat1-value').textContent = `${topItem.currentPrice.toFixed(2)} ${CONFIG.currency}`;
+      document.getElementById('stat2-value').textContent = `${currentItems.length} Artikel`;
+
+      const grid = document.getElementById('cards-grid');
+      grid.innerHTML = '';
+
+      currentItems.forEach((item, index) => {
+        const isFirst = index === 0;
+        const card = document.createElement('div');
+        card.className = `card ${isFirst ? 'rank-1' : ''}`;
+
+        card.innerHTML = `
+          <div class="card-header">
+            <span class="rank-badge">#${index + 1} ${isFirst ? '🏆 PREIS-KNALLER' : ''}</span>
+            <span class="category-tag">${item.tag}</span>
+          </div>
+          <div class="item-name">${item.name}</div>
+          <div class="price-row">
