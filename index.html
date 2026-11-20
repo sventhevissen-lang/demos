@@ -1,1 +1,175 @@
-index.html
+in
+Keine ausgewählt 
+
+Direkt zum Inhalt
+Gmail mit Screenreadern verwenden
+2 von 703
+(kein Betreff)
+Posteingang
+Sven Thevissen <sventhevissen@gmail.com>
+	
+03:19 (vor 14 Stunden)
+	
+	
+an mich
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Bundesliga & DSC Arminia – Club-Marktwert Tracker</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        html { overflow-y: scroll; }
+        body { background-color: #1e2124; color: #ffffff; width: 100%; }
+        #landing-screen { min-height: 100vh; background: radial-gradient(circle at center, #1155a3 0%, #07264d 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .club-crest { width: 130px; height: 150px; background-color: #ffffff; border-radius: 6px 6px 65px 65px; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; padding: 6px; }
+        .crest-inner { width: 100%; height: 100%; background-color: #0e63c4; border-radius: 4px 4px 60px 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .crest-circle { width: 64px; height: 64px; background-color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0e63c4; font-size: 38px; font-weight: 900; margin-bottom: 6px; }
+        .crest-year { font-size: 12px; font-weight: 800; color: #ffffff; }
+        .subtitle { font-size: 12px; letter-spacing: 3px; color: #8bb9eb; text-transform: uppercase; margin-bottom: 12px; }
+        .main-title { font-size: 34px; font-weight: 800; margin-bottom: 30px; text-transform: uppercase; }
+        .stats-bar { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 18px 36px; display: flex; gap: 40px; margin-bottom: 35px; flex-wrap: wrap; justify-content: center; }
+        .stat-item { display: flex; flex-direction: column; align-items: center; }
+        .stat-label { font-size: 10px; text-transform: uppercase; color: #a3c6ed; margin-bottom: 4px; }
+        .stat-value { font-size: 16px; font-weight: 700; }
+        .enter-btn { background-color: #1682e8; color: #ffffff; border: 2px solid #59adff; padding: 16px 40px; font-size: 14px; font-weight: 700; text-transform: uppercase; border-radius: 50px; cursor: pointer; }
+        #tracker-screen { display: none; max-width: 1200px; margin: 0 auto; padding: 25px 20px; }
+        .tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+        .header-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .back-btn { background-color: #36393f; color: #ffffff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .reset-all-btn { background-color: #d9534f; color: #ffffff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .club-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 12px; }
+        .club-card { background-color: #2f3136; border: 2px solid #40444b; border-radius: 10px; padding: 12px 14px; cursor: pointer; }
+        .club-card.active { background-color: #36393f; border-color: #1682e8; }
+        .club-card.arminia-highlight { border-left: 6px solid #1682e8; }
+        .club-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .club-rank { background-color: #202225; color: #b9bbbe; font-size: 11px; font-weight: bold; padding: 2px 7px; border-radius: 5px; }
+        .club-league { font-size: 10px; color: #8e9297; text-transform: uppercase; font-weight: bold; }
+        .club-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+        .club-value { font-size: 14px; font-weight: bold; color: #4cd97b; }
+        .club-controls { display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid #4f545c; gap: 6px; }
+        .club-card.active .club-controls { display: flex; }
+        .btn-up { flex: 1; background-color: #6bd988; color: #14361d; border: none; padding: 6px 4px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-down { flex: 1; background-color: #e87e51; color: #ffffff; border: none; padding: 6px 4px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-reset { background-color: #4f545c; color: #ffffff; border: none; padding: 6px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .add-box { margin-top: 25px; background-color: #2f3136; padding: 16px; border-radius: 10px; }
+        .add-form { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .input-field { flex: 1; min-width: 160px; background-color: #40444b; border: 1px solid #5bc0de; border-radius: 6px; padding: 10px; color: #ffffff; font-size: 14px; }
+        .btn-add { background-color: #5bc0de; color: #ffffff; border: none; border-radius: 6px; padding: 10px 20px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="landing-screen">
+        <div class="club-crest"><div class="crest-inner"><div class="crest-circle">A</div><div class="crest-year">DSC 1905</div></div></div>
+        <div class="subtitle">Bundesliga &amp; DSC Marktwert-Zentrale &bull; Saison 26/27</div>
+        <h1 class="main-title">DSC Arminia Bielefeld</h1>
+        <div class="stats-bar">
+            <div class="stat-item"><span class="stat-label">DSC Marktwert</span><span class="stat-value" id="stat-arminia">20,15 Mio. Euro</span></div>
+            <div class="stat-item"><span class="stat-label">Klubs im Vergleich</span><span class="stat-value" id="stat-clubs">19 Vereine</span></div>
+            <div class="stat-item"><span class="stat-label">Arena</span><span class="stat-value">ALM</span></div>
+        </div>
+        <button type="button" class="enter-btn" onclick="openArena()">🏟️ Club-Arena betreten</button>
+    </div>
+
+    <div id="tracker-screen">
+        <div class="tracker-header">
+            <div><h2>⚽ Bundesliga-Klubs &amp; Arminia (Saison 26/27)</h2><p style="color:#b9bbbe; font-size:13px; margin-top:4px;">Änderungen bleiben dauerhaft gespeichert. Klicke ↺ für den Tageswert.</p></div>
+            <div class="header-buttons">
+                <button type="button" class="reset-all-btn" onclick="resetAllClubs()">↺ Alle auf Tageswert</button>
+                <button type="button" class="back-btn" onclick="openHome()">&larr; Startseite</button>
+            </div>
+        </div>
+        <div class="club-grid" id="club-grid"></div>
+        <div class="add-box">
+            <h3>➕ Weiteren Verein hinzufügen</h3>
+            <div class="add-form">
+                <input type="text" id="new-club-name" class="input-field" placeholder="Vereinsname">
+                <input type="text" id="new-club-league" class="input-field" placeholder="Liga" value="2. Bundesliga">
+                <input type="number" id="new-club-value" class="input-field" placeholder="Marktwert in Mio." min="0" step="0.5">
+                <button type="button" class="btn-add" onclick="addClub()">+ Klub aufnehmen</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        var initialClubs = [
+            { id: "fcb", name: "FC Bayern Muenchen", league: "1. Bundesliga", value: 1040.00 },
+            { id: "bvb", name: "Borussia Dortmund", league: "1. Bundesliga", value: 587.90 },
+            { id: "b04", name: "Bayer 04 Leverkusen", league: "1. Bundesliga", value: 520.45 },
+            { id: "rbl", name: "RB Leipzig", league: "1. Bundesliga", value: 514.95 },
+            { id: "vfb", name: "VfB Stuttgart", league: "1. Bundesliga", value: 399.75 },
+            { id: "sge", name: "Eintracht Frankfurt", league: "1. Bundesliga", value: 288.00 },
+            { id: "tsg", name: "TSG 1899 Hoffenheim", league: "1. Bundesliga", value: 288.00 },
+            { id: "scf", name: "SC Freiburg", league: "1. Bundesliga", value: 195.50 },
+            { id: "bmg", name: "Borussia Moenchengladbach", league: "1. Bundesliga", value: 168.00 },
+            { id: "svw", name: "SV Werder Bremen", league: "1. Bundesliga", value: 142.30 },
+            { id: "m05", name: "1. FSV Mainz 05", league: "1. Bundesliga", value: 134.80 },
+            { id: "fca", name: "FC Augsburg", league: "1. Bundesliga", value: 121.40 },
+            { id: "fcu", name: "1. FC Union Berlin", league: "1. Bundesliga", value: 118.90 },
+            { id: "koe", name: "1. FC Koeln", league: "1. Bundesliga", value: 105.60 },
+            { id: "hsv", name: "Hamburger SV", league: "1. Bundesliga", value: 89.50 },
+            { id: "s04", name: "FC Schalke 04", league: "1. Bundesliga", value: 64.20 },
+            { id: "scp", name: "SC Paderborn 07", league: "1. Bundesliga", value: 34.80 },
+            { id: "sve", name: "SV Elversberg", league: "1. Bundesliga", value: 28.40 },
+            { id: "dsc", name: "DSC Arminia Bielefeld", league: "2. Bundesliga", value: 20.15 }
+        ];
+        var clubs = [];
+        try { var savedData = localStorage.getItem("bundesliga_arminia_clubs_v1"); if (savedData) clubs = JSON.parse(savedData); } catch (e) {}
+        if (!clubs || clubs.length === 0) {
+            clubs = initialClubs.map(function(c) { return { id: c.id, name: c.name, league: c.league, value: c.value, baseValue: c.value }; });
+        }
+        function saveToBrowser() { try { localStorage.setItem("bundesliga_arminia_clubs_v1", JSON.stringify(clubs)); } catch (e) {} }
+        var selectedClubId = "dsc";
+        function openArena() { document.getElementById("landing-screen").style.display = "none"; document.getElementById("tracker-screen").style.display = "block"; renderClubs(); }
+        function openHome() { document.getElementById("tracker-screen").style.display = "none"; document.getElementById("landing-screen").style.display = "flex"; updateLanding(); }
+        function formatValue(val) { return val >= 1000 ? (val / 1000).toFixed(2).replace(".", ",") + " Mrd. Euro" : val.toFixed(2).replace(".", ",") + " Mio. Euro"; }
+        function updateLanding() {
+            for (var i = 0; i < clubs.length; i++) { if (clubs[i].id === "dsc") document.getElementById("stat-arminia").textContent = formatValue(clubs[i].value); }
+            document.getElementById("stat-clubs").textContent = clubs.length + " Vereine";
+        }
+        function selectClub(id) { selectedClubId = id; renderClubs(); }
+        function resetAllClubs() { for (var i = 0; i < clubs.length; i++) { clubs[i].value = clubs[i].baseValue; } saveToBrowser(); renderClubs(); }
+        function addClub() {
+            var name = document.getElementById("new-club-name").value.trim();
+            var league = document.getElementById("new-club-league").value.trim() || "Bundesliga";
+            var val = parseFloat(document.getElementById("new-club-value").value);
+            if (!name || isNaN(val)) { alert("Bitte Vereinsname und Marktwert eingeben!"); return; }
+            var newId = "club_" + Date.now();
+            clubs.push({ id: newId, name: name, league: league, value: val, baseValue: val });
+            selectedClubId = newId;
+            document.getElementById("new-club-name").value = ""; document.getElementById("new-club-value").value = "";
+            saveToBrowser(); renderClubs();
+        }
+        function renderClubs() {
+            var grid = document.getElementById("club-grid"); grid.innerHTML = "";
+            var sorted = clubs.slice().sort(function(a, b) { return b.value - a.value; });
+            for (var i = 0; i < sorted.length; i++) {
+                (function(club, rank) {
+                    var card = document.createElement("div");
+                    card.className = "club-card" + (club.id === selectedClubId ? " active" : "") + (club.id === "dsc" ? " arminia-highlight" : "");
+                    card.addEventListener("click", function() { selectClub(club.id); });
+                    var isChanged = Math.abs(club.value - club.baseValue) > 0.001;
+                    var baseInfo = '<div style="font-size:11px; color:' + (isChanged ? '#f0ad4e' : '#8e9297') + '; margin-top:3px;">Tageswert: ' + formatValue(club.baseValue) + '</div>';
+                    card.innerHTML = '<div class="club-top"><span class="club-rank">#' + rank + '</span><span class="club-league">' + club.league + '</span></div><div class="club-name">' + club.name + '</div><div class="club-value">' + formatValue(club.value) + '</div>' + baseInfo;
+                    var controls = document.createElement("div"); controls.className = "club-controls";
+                    var steps = [{ label: "+5", diff: 5, cls: "btn-up" }, { label: "+1", diff: 1, cls: "btn-up" }, { label: "-1", diff: -1, cls: "btn-down" }, { label: "-5", diff: -5, cls: "btn-down" }];
+                    for (var s = 0; s < steps.length; s++) {
+                        (function(step) {
+                            var btn = document.createElement("button"); btn.type = "button"; btn.className = step.cls; btn.textContent = step.label;
+                            btn.addEventListener("click", function(e) { e.stopPropagation(); club.value = Math.max(0, Math.round((club.value + step.diff) * 100) / 100); saveToBrowser(); renderClubs(); });
+                            controls.appendChild(btn);
+                        })(steps[s]);
+                    }
+                    var resetBtn = document.createElement("button"); resetBtn.type = "button"; resetBtn.className = "btn-reset"; resetBtn.textContent = "↺"; resetBtn.title = "Auf Tageswert zurücksetzen";
+                    resetBtn.addEventListener("click", function(e) { e.stopPropagation(); club.value = club.baseValue; saveToBrowser(); renderClubs(); });
+                    controls.appendChild(resetBtn); card.appendChild(controls); grid.appendChild(card);
+                })(sorted[i], i + 1);
+            }
+            updateLanding();
+        }
+        renderClubs();
+    </script>
+</body>
+</html>
+
+
+dex.html
