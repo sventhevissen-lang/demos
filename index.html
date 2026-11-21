@@ -1,159 +1,35 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Bundesliga & DSC Arminia – Club-Marktwert Tracker</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        html { overflow-y: scroll; }
-        body { background-color: #1e2124; color: #ffffff; width: 100%; }
-        #landing-screen { min-height: 100vh; background: radial-gradient(circle at center, #1155a3 0%, #07264d 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .club-crest { width: 130px; height: 150px; background-color: #ffffff; border-radius: 6px 6px 65px 65px; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; padding: 6px; }
-        .crest-inner { width: 100%; height: 100%; background-color: #0e63c4; border-radius: 4px 4px 60px 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .crest-circle { width: 64px; height: 64px; background-color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0e63c4; font-size: 38px; font-weight: 900; margin-bottom: 6px; }
-        .crest-year { font-size: 12px; font-weight: 800; color: #ffffff; }
-        .subtitle { font-size: 12px; letter-spacing: 3px; color: #8bb9eb; text-transform: uppercase; margin-bottom: 12px; }
-        .main-title { font-size: 34px; font-weight: 800; margin-bottom: 30px; text-transform: uppercase; }
-        .stats-bar { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 18px 36px; display: flex; gap: 40px; margin-bottom: 35px; flex-wrap: wrap; justify-content: center; }
-        .stat-item { display: flex; flex-direction: column; align-items: center; }
-        .stat-label { font-size: 10px; text-transform: uppercase; color: #a3c6ed; margin-bottom: 4px; }
-        .stat-value { font-size: 16px; font-weight: 700; }
-        .enter-btn { background-color: #1682e8; color: #ffffff; border: 2px solid #59adff; padding: 16px 40px; font-size: 14px; font-weight: 700; text-transform: uppercase; border-radius: 50px; cursor: pointer; }
-        #tracker-screen { display: none; max-width: 1200px; margin: 0 auto; padding: 25px 20px; }
-        .tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
-        .header-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .back-btn { background-color: #36393f; color: #ffffff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .reset-all-btn { background-color: #d9534f; color: #ffffff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .club-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 12px; }
-        .club-card { background-color: #2f3136; border: 2px solid #40444b; border-radius: 10px; padding: 12px 14px; cursor: pointer; }
-        .club-card.active { background-color: #36393f; border-color: #1682e8; }
-        .club-card.arminia-highlight { border-left: 6px solid #1682e8; }
-        .club-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .club-rank { background-color: #202225; color: #b9bbbe; font-size: 11px; font-weight: bold; padding: 2px 7px; border-radius: 5px; }
-        .club-league { font-size: 10px; color: #8e9297; text-transform: uppercase; font-weight: bold; }
-        .club-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
-        .club-value { font-size: 14px; font-weight: bold; color: #4cd97b; }
-        .club-controls { display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid #4f545c; gap: 6px; }
-        .club-card.active .club-controls { display: flex; }
-        .btn-up { flex: 1; background-color: #6bd988; color: #14361d; border: none; padding: 6px 4px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .btn-down { flex: 1; background-color: #e87e51; color: #ffffff; border: none; padding: 6px 4px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .btn-reset { background-color: #4f545c; color: #ffffff; border: none; padding: 6px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .add-box { margin-top: 25px; background-color: #2f3136; padding: 16px; border-radius: 10px; }
-        .add-form { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-        .input-field { flex: 1; min-width: 160px; background-color: #40444b; border: 1px solid #5bc0de; border-radius: 6px; padding: 10px; color: #ffffff; font-size: 14px; }
-        .btn-add { background-color: #5bc0de; color: #ffffff; border: none; border-radius: 6px; padding: 10px 20px; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <div id="landing-screen">
-        <div class="club-crest"><div class="crest-inner"><div class="crest-circle">A</div><div class="crest-year">DSC 1905</div></div></div>
-        <div class="subtitle">Bundesliga &amp; DSC Marktwert-Zentrale &bull; Saison 26/27</div>
-        <h1 class="main-title">DSC Arminia Bielefeld</h1>
-        <div class="stats-bar">
-            <div class="stat-item"><span class="stat-label">DSC Marktwert</span><span class="stat-value" id="stat-arminia">20,15 Mio. Euro</span></div>
-            <div class="stat-item"><span class="stat-label">Klubs im Vergleich</span><span class="stat-value" id="stat-clubs">19 Vereine</span></div>
-            <div class="stat-item"><span class="stat-label">Arena</span><span class="stat-value">ALM</span></div>
-        </div>
-        <button type="button" class="enter-btn" onclick="openArena()">🏟️ Club-Arena betreten</button>
-    </div>
-
-    <div id="tracker-screen">
-        <div class="tracker-header">
-            <div><h2>⚽ Bundesliga-Klubs &amp; Arminia (Saison 26/27)</h2><p style="color:#b9bbbe; font-size:13px; margin-top:4px;">Änderungen bleiben dauerhaft gespeichert. Klicke ↺ für den Tageswert.</p></div>
-            <div class="header-buttons">
-                <button type="button" class="reset-all-btn" onclick="resetAllClubs()">↺ Alle auf Tageswert</button>
-                <button type="button" class="back-btn" onclick="openHome()">&larr; Startseite</button>
-            </div>
-        </div>
-        <div class="club-grid" id="club-grid"></div>
-        <div class="add-box">
-            <h3>➕ Weiteren Verein hinzufügen</h3>
-            <div class="add-form">
-                <input type="text" id="new-club-name" class="input-field" placeholder="Vereinsname">
-                <input type="text" id="new-club-league" class="input-field" placeholder="Liga" value="2. Bundesliga">
-                <input type="number" id="new-club-value" class="input-field" placeholder="Marktwert in Mio." min="0" step="0.5">
-                <button type="button" class="btn-add" onclick="addClub()">+ Klub aufnehmen</button>
-            </div>
-        </div>
-    </div>
-    <script>
-        var initialClubs = [
-            { id: "fcb", name: "FC Bayern Muenchen", league: "1. Bundesliga", value: 1040.00 },
-            { id: "bvb", name: "Borussia Dortmund", league: "1. Bundesliga", value: 587.90 },
-            { id: "b04", name: "Bayer 04 Leverkusen", league: "1. Bundesliga", value: 520.45 },
-            { id: "rbl", name: "RB Leipzig", league: "1. Bundesliga", value: 514.95 },
-            { id: "vfb", name: "VfB Stuttgart", league: "1. Bundesliga", value: 399.75 },
-            { id: "sge", name: "Eintracht Frankfurt", league: "1. Bundesliga", value: 288.00 },
-            { id: "tsg", name: "TSG 1899 Hoffenheim", league: "1. Bundesliga", value: 288.00 },
-            { id: "scf", name: "SC Freiburg", league: "1. Bundesliga", value: 195.50 },
-            { id: "bmg", name: "Borussia Moenchengladbach", league: "1. Bundesliga", value: 168.00 },
-            { id: "svw", name: "SV Werder Bremen", league: "1. Bundesliga", value: 142.30 },
-            { id: "m05", name: "1. FSV Mainz 05", league: "1. Bundesliga", value: 134.80 },
-            { id: "fca", name: "FC Augsburg", league: "1. Bundesliga", value: 121.40 },
-            { id: "fcu", name: "1. FC Union Berlin", league: "1. Bundesliga", value: 118.90 },
-            { id: "koe", name: "1. FC Koeln", league: "1. Bundesliga", value: 105.60 },
-            { id: "hsv", name: "Hamburger SV", league: "1. Bundesliga", value: 89.50 },
-            { id: "s04", name: "FC Schalke 04", league: "1. Bundesliga", value: 64.20 },
-            { id: "scp", name: "SC Paderborn 07", league: "1. Bundesliga", value: 34.80 },
-            { id: "sve", name: "SV Elversberg", league: "1. Bundesliga", value: 28.40 },
-            { id: "dsc", name: "DSC Arminia Bielefeld", league: "2. Bundesliga", value: 20.15 }
-        ];
-        var clubs = [];
-        try { var savedData = localStorage.getItem("bundesliga_arminia_clubs_v1"); if (savedData) clubs = JSON.parse(savedData); } catch (e) {}
-        if (!clubs || clubs.length === 0) {
-            clubs = initialClubs.map(function(c) { return { id: c.id, name: c.name, league: c.league, value: c.value, baseValue: c.value }; });
-        }
-        function saveToBrowser() { try { localStorage.setItem("bundesliga_arminia_clubs_v1", JSON.stringify(clubs)); } catch (e) {} }
-        var selectedClubId = "dsc";
-        function openArena() { document.getElementById("landing-screen").style.display = "none"; document.getElementById("tracker-screen").style.display = "block"; renderClubs(); }
-        function openHome() { document.getElementById("tracker-screen").style.display = "none"; document.getElementById("landing-screen").style.display = "flex"; updateLanding(); }
-        function formatValue(val) { return val >= 1000 ? (val / 1000).toFixed(2).replace(".", ",") + " Mrd. Euro" : val.toFixed(2).replace(".", ",") + " Mio. Euro"; }
-        function updateLanding() {
-            for (var i = 0; i < clubs.length; i++) { if (clubs[i].id === "dsc") document.getElementById("stat-arminia").textContent = formatValue(clubs[i].value); }
-            document.getElementById("stat-clubs").textContent = clubs.length + " Vereine";
-        }
-        function selectClub(id) { selectedClubId = id; renderClubs(); }
-        function resetAllClubs() { for (var i = 0; i < clubs.length; i++) { clubs[i].value = clubs[i].baseValue; } saveToBrowser(); renderClubs(); }
-        function addClub() {
-            var name = document.getElementById("new-club-name").value.trim();
-            var league = document.getElementById("new-club-league").value.trim() || "Bundesliga";
-            var val = parseFloat(document.getElementById("new-club-value").value);
-            if (!name || isNaN(val)) { alert("Bitte Vereinsname und Marktwert eingeben!"); return; }
-            var newId = "club_" + Date.now();
-            clubs.push({ id: newId, name: name, league: league, value: val, baseValue: val });
-            selectedClubId = newId;
-            document.getElementById("new-club-name").value = ""; document.getElementById("new-club-value").value = "";
-            saveToBrowser(); renderClubs();
-        }
-        function renderClubs() {
-            var grid = document.getElementById("club-grid"); grid.innerHTML = "";
-            var sorted = clubs.slice().sort(function(a, b) { return b.value - a.value; });
-            for (var i = 0; i < sorted.length; i++) {
-                (function(club, rank) {
-                    var card = document.createElement("div");
-                    card.className = "club-card" + (club.id === selectedClubId ? " active" : "") + (club.id === "dsc" ? " arminia-highlight" : "");
-                    card.addEventListener("click", function() { selectClub(club.id); });
-                    var isChanged = Math.abs(club.value - club.baseValue) > 0.001;
-                    var baseInfo = '<div style="font-size:11px; color:' + (isChanged ? '#f0ad4e' : '#8e9297') + '; margin-top:3px;">Tageswert: ' + formatValue(club.baseValue) + '</div>';
-                    card.innerHTML = '<div class="club-top"><span class="club-rank">#' + rank + '</span><span class="club-league">' + club.league + '</span></div><div class="club-name">' + club.name + '</div><div class="club-value">' + formatValue(club.value) + '</div>' + baseInfo;
-                    var controls = document.createElement("div"); controls.className = "club-controls";
-                    var steps = [{ label: "+5", diff: 5, cls: "btn-up" }, { label: "+1", diff: 1, cls: "btn-up" }, { label: "-1", diff: -1, cls: "btn-down" }, { label: "-5", diff: -5, cls: "btn-down" }];
-                    for (var s = 0; s < steps.length; s++) {
-                        (function(step) {
-                            var btn = document.createElement("button"); btn.type = "button"; btn.className = step.cls; btn.textContent = step.label;
-                            btn.addEventListener("click", function(e) { e.stopPropagation(); club.value = Math.max(0, Math.round((club.value + step.diff) * 100) / 100); saveToBrowser(); renderClubs(); });
-                            controls.appendChild(btn);
-                        })(steps[s]);
-                    }
-                    var resetBtn = document.createElement("button"); resetBtn.type = "button"; resetBtn.className = "btn-reset"; resetBtn.textContent = "↺"; resetBtn.title = "Auf Tageswert zurücksetzen";
-                    resetBtn.addEventListener("click", function(e) { e.stopPropagation(); club.value = club.baseValue; saveToBrowser(); renderClubs(); });
-                    controls.appendChild(resetBtn); card.appendChild(controls); grid.appendChild(card);
-                })(sorted[i], i + 1);
-            }
-            updateLanding();
-        }
-        renderClubs();
-    </script>
-</body>
-</html>
+<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#0f141c"><title>Schulhof Elfmeter-Arena v1.4</title><style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0f141c;color:#fff;padding:12px 12px 94px;max-width:540px;margin:0 auto;user-select:none}
+.header{background:#182232;border:1px solid #38bdf8;border-radius:18px;padding:14px;margin-bottom:12px}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+h1{font-size:1.15rem;font-weight:800}.badge-dev{display:inline-block;background:rgba(56,189,248,.15);border:1px solid #38bdf8;color:#7dd3fc;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:99px;margin-bottom:10px}
+.icon-btn{background:#1e293b;color:#38bdf8;border:1px solid #38bdf8;border-radius:10px;padding:7px 10px;font-size:.8rem;font-weight:700}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#0f141c;border:1px solid #2d4363;padding:9px 12px;border-radius:12px}
+.stat small{display:block;color:#94a3b8;font-size:.68rem}.stat strong{font-size:1.1rem;color:#4cd97b}
+.search{width:100%;margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid #2d4363;background:#0f141c;color:#fff;font-size:16px}
+.card{background:#18202c;border:1px solid #2c3a4f;border-radius:15px;padding:12px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.left{display:flex;align-items:center;gap:9px;flex:1}.rank{background:#1e293b;border:1px solid #38bdf8;color:#38bdf8;font-weight:800;font-size:.82rem;padding:5px 7px;border-radius:9px;min-width:34px;text-align:center}
+.name{font-weight:700;font-size:.98rem}.sub{font-size:.75rem;color:#94a3b8}.val{font-size:.98rem;color:#4cd97b;font-weight:800}
+.btns{display:flex;gap:5px}.btn{border:none;border-radius:9px;padding:9px;font-weight:800;font-size:.82rem}.plus{background:#16a34a;color:#fff}.minus{background:#dc2626;color:#fff}.edit{background:#1e293b;color:#e2e8f0}
+.add-box{margin-top:14px;background:#18202c;border:1px solid #38bdf8;padding:14px;border-radius:16px;display:flex;flex-direction:column;gap:9px}
+.add-box input{width:100%;padding:12px;border-radius:11px;border:1px solid #334155;background:#0f141c;color:#fff;font-size:16px}.add-btn{background:#0284c7;color:#fff;padding:13px;border-radius:11px;border:none;font-size:16px;font-weight:800}
+#game-box{display:none;background:#18202c;border:1px solid #38bdf8;border-radius:18px;padding:14px;text-align:center}
+.mode-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}.m-btn{background:#0f141c;color:#94a3b8;border:1px solid #334155;padding:9px 4px;border-radius:10px;font-weight:800;font-size:.78rem}.m-btn.active{background:#0284c7;color:#fff}
+.shooter-select{width:100%;padding:10px;border-radius:11px;background:#0f141c;color:#fff;border:1px solid #38bdf8;font-size:16px;font-weight:700;margin-bottom:9px}
+.scoreboard{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#0f141c;padding:9px;border-radius:11px;margin-bottom:9px}
+.duel-board{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.duel-card{background:#0f141c;border:2px solid #2c3a4f;border-radius:11px;padding:8px}.duel-card.turn{border-color:#ffd500}
+.duel-name{width:100%;background:transparent;border:none;border-bottom:1px dashed #334155;color:#fff;text-align:center;font-weight:800;font-size:16px;margin-bottom:4px}
+.dots{display:flex;justify-content:center;gap:8px;margin:7px 0}.pitch{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;background:#14532d;border:3px solid #fff;border-radius:14px;padding:22px 8px;margin:10px 0;font-size:2.1rem}
+.shoot-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.shoot-btns button{background:#0284c7;color:#fff;padding:15px 6px;border-radius:11px;border:none;font-size:.95rem;font-weight:800}
+.hs-box{margin-top:14px;background:#0f141c;border:1px solid #2c3a4f;border-radius:12px;padding:11px;text-align:left}.hs-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.hs-save{background:#16a34a;color:#fff;border:none;border-radius:8px;padding:7px 11px;font-weight:800;font-size:.8rem}.hs-row{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid #1e293b;font-size:.84rem}
+.copy{text-align:center;font-size:.7rem;color:#64748b;margin-top:18px}.nav-bar{position:fixed;bottom:0;left:0;right:0;background:#18202c;border-top:1px solid #2c3a4f;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px 14px;z-index:100}.nav-item{background:none;border:none;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;font-weight:700}.nav-item span{font-size:1.35rem}.nav-item.active{color:#38bdf8}
+</style></head><body>
+<div class="header"><div class="header-top"><h1 id="title">⚽ Punkte-Tracker</h1><div style="display:flex;gap:6px"><button class="icon-btn" id="snd-btn" onclick="toggleSound()">🔊 Ton</button><button class="icon-btn" id="rst-btn" onclick="resetAll()">↺ Reset</button></div></div><div class="badge-dev">⚡ App v1.4 • Developed by Sven Thevissen</div><div class="stats"><div class="stat"><small>Gesamtwert</small><strong id="sum">0</strong></div><div class="stat"><small>Einträge</small><strong id="cnt" style="color:#38bdf8">0</strong></div></div><input class="search" id="q" oninput="render()" placeholder="🔍 Suchen & filtern..."></div>
+<div id="game-box"><h2 style="font-size:1.12rem">🥅 Schulhof Elfmeter-Arena</h2><div class="mode-switch"><button class="m-btn active" id="btn-solo" onclick="setGameType('solo')">🏆 Solo</button><button class="m-btn" id="btn-duel" onclick="setGameType('duel')">⚔️ 1 vs 1</button><button class="m-btn" id="btn-blitz" onclick="setGameType('blitz')">⚡ 30s Blitz</button></div><div id="solo-ui"><select id="shooter" class="shooter-select"></select><div class="scoreboard"><div><small style="color:#94a3b8">PUNKTE</small><div id="pts" style="color:#4cd97b;font-weight:800;font-size:1.15rem">0</div></div><div><small style="color:#94a3b8" id="lbl-2">SERIE</small><div id="streak" style="color:#ffd500;font-weight:800;font-size:1.15rem">0🔥</div></div><div><small style="color:#94a3b8">REKORD</small><div id="best" style="color:#38bdf8;font-weight:800;font-size:1.15rem">0</div></div></div><div class="dots" id="dots">⚪ ⚪ ⚪ ⚪ ⚪</div></div><div class="duel-board" id="duel-ui"><div class="duel-card turn" id="p1-card"><input class="duel-name" id="p1-name" value="Spieler 1"><div id="p1-score" style="font-size:1.35rem;font-weight:900;color:#4cd97b">0</div><div id="p1-dots" style="font-size:.82rem;margin-top:3px">⚪⚪⚪⚪⚪</div></div><div class="duel-card" id="p2-card"><input class="duel-name" id="p2-name" value="Spieler 2"><div id="p2-score" style="font-size:1.35rem;font-weight:900;color:#4cd97b">0</div><div id="p2-dots" style="font-size:.82rem;margin-top:3px">⚪⚪⚪⚪⚪</div></div></div><div class="pitch" id="pitch"><div id="g0">🥅</div><div id="g1">🧤</div><div id="g2">🥅</div></div><div id="g-msg" style="font-weight:800;color:#ffd500;margin-bottom:12px;min-height:22px">Wähle deine Ecke!</div><div class="shoot-btns"><button onclick="shoot(0)">⬅️ Links</button><button onclick="shoot(1)">⬆️ Mitte</button><button onclick="shoot(2)">➡️ Rechts</button></div><div class="hs-box" id="hs-panel"><div class="hs-head"><strong style="font-size:.86rem;color:#38bdf8">🏆 Highscores (Top 5)</strong><button class="hs-save" id="hs-btn" onclick="saveScore()">+ Score sichern</button></div><div id="hs-list"></div></div></div>
+<div id="list"></div><div class="add-box" id="add-box"><strong style="font-size:.92rem;color:#bae6fd">+ Neuer Eintrag</strong><input type="text" id="p-name" placeholder="Name / Bezeichnung"><input type="text" id="p-club" placeholder="Verein / Kategorie / Notiz"><input type="number" id="p-val" placeholder="Punkte / Wert" step="10"><button class="add-btn" onclick="addPlayer()">Speichern</button></div><div class="copy">© 2026 Sven Thevissen • v1.4</div><nav class="nav-bar"><button class="nav-item active" id="nav-sport" onclick="setMode('sport')"><span>⚽</span>Fußball</button><button class="nav-item" id="nav-immo" onclick="setMode('immo')"><span>🏠</span>Immo</button><button class="nav-item" id="nav-shop" onclick="setMode('shop')"><span>🛒</span>Shop</button><button class="nav-item" id="nav-game" onclick="openGame()"><span>🎮</span>Elfmeter</button></nav>
+<script>
+const presets={sport:{title:"⚽ Spieler-Punkte",unit:"Pkt.",step:50,items:[{name:"Lamine Yamal",club:"FC Barcelona",val:500},{name:"Jamal Musiala",club:"FC Bayern München",val:450},{name:"Florian Wirtz",club:"Bayer 04 Leverkusen",val:450}]},immo:{title:"🏠 Immobilien",unit:"Tsd. €",step:10,items:[{name:"3-Zi. Wohnung List",club:"Hannover • 88 m²",val:345},{name:"Reihenhaus Kirchrode",club:"Hannover • 125 m²",val:490}]},shop:{title:"🛒 Sortiment",unit:"€",step:1,items:[{name:"Kaffeebohnen 1kg",club:"Lager: 120 Stk.",val:14},{name:"Bio-Weidebutter",club:"Kühlregal",val:3}]}};
+let mode=localStorage.getItem("pro_mode")||"sport",list=JSON.parse(localStorage.getItem("pro_data_v9_"+mode))||JSON.parse(JSON.stringify(presets.sport.items)),highscores=JSON.parse(localStorage.getItem("pro_hs_v9")||"[]"),gameType="solo",sessionPts=0,streak=0,round=[],rst=false,soundOn=true,ac=null,blitzTimer=null,timeLeft=30,duel={turn:1,p1:[],p2:[],s1:0,s2:0};
+function beep(t){if(!soundOn)return;try{if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=t==="goal"?660:140;g.gain.value=.25;o.start();o.stop(ac.currentTime+.22)}catch(e){}}
 
