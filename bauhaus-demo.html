@@ -1,1 +1,146 @@
+<pre>test@sven-thevissen-ThinkCentre-M710q:~$ 
 
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+test@sven-thevissen-ThinkCentre-M710q:~$ cat &lt;&lt; &apos;EOF&apos; &gt; ~/dsc-app/spieler.html
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;de&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+&lt;title&gt;⚽ Live-Marktwert Tracker&lt;/title&gt;
+&lt;style&gt;
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+  body { background: #1e2124; color: #ffffff; padding: 16px; max-width: 600px; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .card {
+    background: #36393f;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+  .val { font-size: 0.92rem; color: #b9bbbe; }
+  .val span { color: #4cd97b; font-weight: 800; }
+  .btns { display: flex; gap: 8px; }
+  button {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .plus { background: #6bd988; color: #102a17; }
+  .minus { background: #e87e51; color: #ffffff; }
+  .add-box {
+    margin-top: 22px;
+    background: #2f3136;
+    padding: 16px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #4f545c;
+    background: #40444b;
+    color: #ffffff;
+    font-size: 1rem;
+  }
+  .add-btn { background: #5bc0de; color: #0f2933; width: 100%; padding: 12px; font-size: 1rem; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;⚽ Live-Marktwert Tracker&lt;/h1&gt;
+  &lt;div id=&quot;list&quot;&gt;&lt;/div&gt;
+
+  &lt;div class=&quot;add-box&quot;&gt;
+    &lt;input type=&quot;text&quot; id=&quot;p-name&quot; placeholder=&quot;Spielername (z. B. Harry Kane)&quot;&gt;
+    &lt;input type=&quot;number&quot; id=&quot;p-val&quot; placeholder=&quot;Marktwert in Mio. €&quot; step=&quot;1&quot;&gt;
+    &lt;button class=&quot;add-btn&quot; onclick=&quot;addPlayer()&quot;&gt;+ Hinzufügen&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    const defaults = [
+      { name: &quot;Jamal Musiala&quot;, val: 140 },
+      { name: &quot;Florian Wirtz&quot;, val: 140 },
+      { name: &quot;Lamine Yamal&quot;, val: 180 }
+    ];
+    let players = JSON.parse(localStorage.getItem(&quot;players_v1&quot;)) || defaults;
+
+    function render() {
+      localStorage.setItem(&quot;players_v1&quot;, JSON.stringify(players));
+      document.getElementById(&quot;list&quot;).innerHTML = players.map((p, i) =&gt; `
+        &lt;div class=&quot;card&quot;&gt;
+          &lt;div&gt;
+            &lt;div class=&quot;name&quot;&gt;${p.name}&lt;/div&gt;
+            &lt;div class=&quot;val&quot;&gt;Marktwert: &lt;span&gt;${p.val} Mio. €&lt;/span&gt;&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;btns&quot;&gt;
+            &lt;button class=&quot;plus&quot; onclick=&quot;change(${i}, 5)&quot;&gt;+5 Mio.&lt;/button&gt;
+            &lt;button class=&quot;minus&quot; onclick=&quot;change(${i}, -5)&quot;&gt;-5 Mio.&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      `).join(&quot;&quot;);
+    }
+    function change(i, d) { players[i].val = Math.max(0, players[i].val + d); render(); }
+    function addPlayer() {
+      const n = document.getElementById(&quot;p-name&quot;).value.trim();
+      const v = parseFloat(document.getElementById(&quot;p-val&quot;).value);
+      if (!n || isNaN(v)) return;
+      players.push({ name: n, val: v });
+      document.getElementById(&quot;p-name&quot;).value = &quot;&quot;;
+      document.getElementById(&quot;p-val&quot;).value = &quot;&quot;;
+      render();
+    }
+    render();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+EOF
+test@sven-thevissen-ThinkCentre-M710q:~$ 
+</pre>
