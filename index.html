@@ -155,3 +155,235 @@ const presets = {
 
 let mode = localStorage.getItem("pro_mode") || "sport";
 if (!presets[mode]) mode = "sport";
+  let list = JSON.parse(localStorage.getItem("pro_data_v11_" + mode) || "null") || JSON.parse(JSON.stringify(presets[mode].items));
+let highscores = JSON.parse(localStorage.getItem("pro_hs_v11") || "[]");
+let gameType = "solo", sessionPts = 0, streak = 0, round = [], rst = false, soundOn = true, ac = null, blitzTimer = null, timeLeft = 30;
+let duel = { turn: 1, p1: [], p2: [], s1: 0, s2: 0 };
+
+function getBestScore() {
+  return highscores.reduce((max, item) => Math.max(max, item.pts || 0), 0);
+}
+
+function beep(t) {
+  if (!soundOn) return;
+  try {
+    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === "suspended") ac.resume();
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.frequency.value = t === "goal" ? 660 : 140;
+    g.gain.value = 0.25;
+    o.start(); o.stop(ac.currentTime + 0.22);
+  } catch (e) {}
+}
+
+function toggleSound() {
+  soundOn = !soundOn;
+  document.getElementById("snd-btn").textContent = soundOn ? "🔊 Ton" : "🔇 Stumm";
+  if (soundOn) beep("goal");
+}
+
+function setNav(id) {
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+  const el = document.getElementById("nav-" + id);
+  if (el) el.classList.add("active");
+}
+
+function setMode(m) {
+  clearInterval(blitzTimer); blitzTimer = null;
+  mode = m;
+  localStorage.setItem("pro_mode", m);
+  list = JSON.parse(localStorage.getItem("pro_data_v11_" + mode) || "null") || JSON.parse(JSON.stringify(presets[mode].items));
+  document.getElementById("list").style.display = "block";
+  document.getElementById("add-box").style.display = "flex";
+  document.getElementById("q").style.display = "block";
+  document.getElementById("game-box").style.display = "none";
+  setNav(m);
+  render();
+}
+
+function openGame() {
+  if (mode !== "sport") setMode("sport");
+  setNav("game");
+  document.getElementById("list").style.display = "none";
+  document.getElementById("add-box").style.display = "none";
+  document.getElementById("q").style.display = "none";
+  document.getElementById("game-box").style.display = "block";
+  updateShooters();
+  renderHS();
+}
+
+function setGameType(t) {
+  clearInterval(blitzTimer); blitzTimer = null;
+  gameType = t;
+  ["solo", "duel", "blitz"].forEach(x => document.getElementById("btn-" + x).classList.toggle("active", t === x));
+  document.getElementById("solo-ui").style.display = t === "duel" ? "none" : "block";
+  document.getElementById("hs-panel").style.display = t === "duel" ? "none" : "block";
+  document.getElementById("duel-ui").style.display = t === "duel" ? "grid" : "none";
+  document.getElementById("dots").style.display = t === "solo" ? "flex" : "none";
+  document.getElementById("lbl-2").textContent = t === "blitz" ? "ZEIT" : "SERIE";
+  sessionPts = 0; streak = 0; round = [];
+  document.getElementById("pts").textContent = "0";
+  if (t === "duel") {
+    duel = { turn: 1, p1: [], p2: [], s1: 0, s2: 0 };
+    updateDuelUI();
+    document.getElementById("g-msg").textContent = (document.getElementById("p1-name").value || "Spieler 1") + " beginnt!";
+  } else if (t === "blitz") {
+    timeLeft = 30;
+    document.getElementById("streak").textContent = "30s⏱️";
+    document.getElementById("g-msg").textContent = "30s Blitz! Schieß los!";
+  } else {
+    document.getElementById("streak").textContent = "0🔥";
+    document.getElementById("g-msg").textContent = "Wähle deine Ecke!";
+  }
+}
+
+function startBlitz() {
+  if (blitzTimer) return;
+  timeLeft = 30;
+  blitzTimer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("streak").textContent = timeLeft + "s⏱️";
+    if (timeLeft <= 0) {
+      clearInterval(blitzTimer); blitzTimer = null;
+      beep("save");
+      document.getElementById("g-msg").textContent = "⏰ ZEIT UM! " + sessionPts + " Pkt. – Score sichern!";
+    }
+  }, 1000);
+}
+
+function updateDuelUI() {
+  const f = a => [...a, ...Array(Math.max(0, 5 - a.length)).fill("⚪")].join("");
+  document.getElementById("p1-score").textContent = duel.s1;
+  document.getElementById("p2-score").textContent = duel.s2;
+  document.getElementById("p1-dots").textContent = f(duel.p1);
+  document.getElementById("p2-dots").textContent = f(duel.p2);
+  document.getElementById("p1-card").classList.toggle("turn", duel.turn === 1);
+  document.getElementById("p2-card").classList.toggle("turn", duel.turn === 2);
+}
+
+function updateShooters() {
+  document.getElementById("shooter").innerHTML = list.map((p, i) => "<option value='" + i + "'>Schütze: " + p.name + " (" + p.val + " Pkt.)</option>").join("");
+}
+
+function updateDots() {
+  const a = [...round];
+  while (a.length < 5) a.push("⚪");
+  document.getElementById("dots").textContent = a.join(" ");
+}
+
+function shoot(d) {
+  if (gameType === "blitz") {
+    if (timeLeft <= 0) setGameType("blitz");
+    startBlitz();
+  }
+  const k = Math.floor(Math.random() * 3);
+  for (let i = 0; i < 3; i++) document.getElementById("g" + i).textContent = i === k ? "🧤" : "🥅";
+  const goal = d !== k;
+  document.getElementById("g" + d).textContent = goal ? "⚽" : "❌";
+  beep(goal ? "goal" : "save");
+  if (navigator.vibrate) navigator.vibrate(goal ? 80 : 160);
+
+  if (gameType === "duel") {
+    const n1 = document.getElementById("p1-name").value || "Spieler 1";
+    const n2 = document.getElementById("p2-name").value || "Spieler 2";
+    if (duel.p1.length >= 5 && duel.p2.length >= 5 && duel.s1 !== duel.s2) {
+      duel = { turn: 1, p1: [], p2: [], s1: 0, s2: 0 };
+    }
+    if (duel.turn === 1) {
+      duel.p1.push(goal ? "🟢" : "🔴");
+      if (goal) duel.s1 += 50;
+      duel.turn = 2;
+      document.getElementById("g-msg").textContent = (goal ? "TOOR " + n1 + "! " : "Gehalten! ") + "Jetzt " + n2 + "!";
+    } else {
+      duel.p2.push(goal ? "🟢" : "🔴");
+      if (goal) duel.s2 += 50;
+      duel.turn = 1;
+      if (duel.p2.length >= 5) {
+        if (duel.s1 === duel.s2) {
+          document.getElementById("g-msg").textContent = "⚡ SUDDEN DEATH! (" + duel.s1 + ":" + duel.s2 + ") – " + n1 + "!";
+        } else {
+          const w = duel.s1 > duel.s2 ? "🏆 " + n1.toUpperCase() + " SIEGT!" : "🏆 " + n2.toUpperCase() + " SIEGT!";
+          document.getElementById("g-msg").textContent = w + " (" + duel.s1 + ":" + duel.s2 + ")";
+        }
+      } else {
+        document.getElementById("g-msg").textContent = (goal ? "TOOR " + n2 + "! " : "Gehalten! ") + "Jetzt " + n1 + "!";
+      }
+    }
+    updateDuelUI();
+    return;
+  }
+
+  if (round.length >= 5) round = [];
+  const idx = parseInt(document.getElementById("shooter").value) || 0;
+  if (!goal) {
+    streak = 0;
+    round.push("🔴");
+    document.getElementById("g-msg").textContent = "Gehalten!";
+  } else {
+    streak++;
+    round.push("🟢");
+    const g = (gameType === "solo" && streak % 3 === 0) ? 150 : 50;
+    sessionPts += g;
+    const target = list.at(idx);
+    if (target) {
+      target.val = +(target.val + g).toFixed(1);
+      render(true);
+      updateShooters();
+      document.getElementById("shooter").value = idx;
+      document.getElementById("g-msg").textContent = "TOOOOR! +" + g + " Pkt. → " + target.name;
+    }
+  }
+  if (gameType === "solo") {
+    updateDots();
+    document.getElementById("streak").textContent = streak + "🔥";
+  }
+  document.getElementById("pts").textContent = sessionPts;
+  document.getElementById("best").textContent = Math.max(sessionPts, getBestScore());
+}
+
+function saveScore() {
+  if (sessionPts <= 0) return;
+  const idx = parseInt(document.getElementById("shooter").value) || 0;
+  const target = list.at(idx);
+  const name = target ? target.name : "Sven";
+  const now = new Date().toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
+  highscores.push({ name, pts: sessionPts, date: now });
+  highscores.sort((a, b) => b.pts - a.pts);
+  highscores = highscores.slice(0, 5);
+  localStorage.setItem("pro_hs_v11", JSON.stringify(highscores));
+  sessionPts = 0; streak = 0; round = [];
+  document.getElementById("pts").textContent = "0";
+  if (gameType === "solo") {
+    document.getElementById("streak").textContent = "0🔥";
+    updateDots();
+  }
+  renderHS();
+}
+
+function renderHS() {
+  document.getElementById("best").textContent = Math.max(sessionPts, getBestScore());
+  const el = document.getElementById("hs-list");
+  if (!highscores.length) {
+    el.innerHTML = "<div style='color:#64748b;font-size:.82rem'>Schieß Tore und tippe auf + Score sichern!</div>";
+    return;
+  }
+  const m = ["🥇", "🥈", "🥉", "4.", "5."];
+  el.innerHTML = highscores.map((h, i) => "<div class='hs-row'><span>" + m.at(i) + " <strong>" + h.name + "</strong> <small style='color:#64748b'>(" + h.date + ")</small></span><span style='color:#4cd97b;font-weight:800'>" + h.pts + " Pkt.</span></div>").join("");
+}
+
+function render(kg = false) {
+  const cfg = presets[mode];
+  document.getElementById("title").textContent = cfg.title;
+  if (!kg) setNav(mode);
+  localStorage.setItem("pro_data_v11_" + mode, JSON.stringify(list));
+  const q = document.getElementById("q").value.toLowerCase();
+  const sorted = [...list].sort((a, b) => b.val - a.val);
+  const fil = sorted.filter(p => p.name.toLowerCase().includes(q) || (p.club || "").toLowerCase().includes(q));
+  const sum = list.reduce((s, p) => s + p.val, 0);
+  document.getElementById("sum").textContent = sum.toFixed(1).replace(".0", "") + " " + cfg.unit;
+  document.getElementById("cnt").textContent = list.length;
+  const m = ["🥇", "🥈", "🥉"];
+  document.getElementById("list").innerHTML = fil.map(p => {
+    const idx = list.indexOf(p), r = sorted.indexOf(p);
+
