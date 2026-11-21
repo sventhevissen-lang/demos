@@ -1,389 +1,57 @@
-
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0f141c">
-<title>Schulhof Elfmeter-Arena v1.6</title>
-<style>
+<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#0f141c"><title>Schulhof Elfmeter-Arena v1.7</title><style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:#0f141c;color:#fff;padding:12px 12px 94px;max-width:540px;margin:0 auto;user-select:none}
 .header{background:#182232;border:1px solid #38bdf8;border-radius:18px;padding:14px;margin-bottom:12px}
 .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-h1{font-size:1.15rem;font-weight:800}
-.badge-dev{display:inline-block;background:rgba(56,189,248,.15);border:1px solid #38bdf8;color:#7dd3fc;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:99px;margin-bottom:10px}
+h1{font-size:1.15rem;font-weight:800}.badge-dev{display:inline-block;background:rgba(56,189,248,.15);border:1px solid #38bdf8;color:#7dd3fc;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:99px;margin-bottom:10px}
 .icon-btn{background:#1e293b;color:#38bdf8;border:1px solid #38bdf8;border-radius:10px;padding:7px 10px;font-size:.8rem;font-weight:700;cursor:pointer}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.stat{background:#0f141c;border:1px solid #2d4363;padding:9px 12px;border-radius:12px}
-.stat small{display:block;color:#94a3b8;font-size:.68rem}
-.stat strong{font-size:1.1rem;color:#4cd97b}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#0f141c;border:1px solid #2d4363;padding:9px 12px;border-radius:12px}
+.stat small{display:block;color:#94a3b8;font-size:.68rem}.stat strong{font-size:1.1rem;color:#4cd97b}
 .search{width:100%;margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid #2d4363;background:#0f141c;color:#fff;font-size:16px}
 .card{background:#18202c;border:1px solid #2c3a4f;border-radius:15px;padding:12px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.left{display:flex;align-items:center;gap:9px;flex:1}
-.rank{background:#1e293b;border:1px solid #38bdf8;color:#38bdf8;font-weight:800;font-size:.82rem;padding:5px 7px;border-radius:9px;min-width:34px;text-align:center}
-.name{font-weight:700;font-size:.98rem}
-.sub{font-size:.75rem;color:#94a3b8}
-.val{font-size:.98rem;color:#4cd97b;font-weight:800}
-.btns{display:flex;gap:5px}
-.btn{border:none;border-radius:9px;padding:9px;font-weight:800;font-size:.82rem;cursor:pointer}
-.plus{background:#16a34a;color:#fff}
-.minus{background:#dc2626;color:#fff}
-.edit{background:#1e293b;color:#e2e8f0}
+.left{display:flex;align-items:center;gap:9px;flex:1}.rank{background:#1e293b;border:1px solid #38bdf8;color:#38bdf8;font-weight:800;font-size:.82rem;padding:5px 7px;border-radius:9px;min-width:34px;text-align:center}
+.name{font-weight:700;font-size:.98rem}.sub{font-size:.75rem;color:#94a3b8}.val{font-size:.98rem;color:#4cd97b;font-weight:800}
+.btns{display:flex;gap:5px}.btn{border:none;border-radius:9px;padding:9px;font-weight:800;font-size:.82rem;cursor:pointer}.plus{background:#16a34a;color:#fff}.minus{background:#dc2626;color:#fff}.edit{background:#1e293b;color:#e2e8f0}
 .add-box{margin-top:14px;background:#18202c;border:1px solid #38bdf8;padding:14px;border-radius:16px;display:flex;flex-direction:column;gap:9px}
-.add-box input{width:100%;padding:12px;border-radius:11px;border:1px solid #334155;background:#0f141c;color:#fff;font-size:16px}
-.add-btn{background:#0284c7;color:#fff;padding:13px;border-radius:11px;border:none;font-size:16px;font-weight:800;cursor:pointer}
+.add-box input{width:100%;padding:12px;border-radius:11px;border:1px solid #334155;background:#0f141c;color:#fff;font-size:16px}.add-btn{background:#0284c7;color:#fff;padding:13px;border-radius:11px;border:none;font-size:16px;font-weight:800;cursor:pointer}
 #game-box{display:none;background:#18202c;border:1px solid #38bdf8;border-radius:18px;padding:14px;text-align:center}
-.mode-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
-.m-btn{background:#0f141c;color:#94a3b8;border:1px solid #334155;padding:9px 4px;border-radius:10px;font-weight:800;font-size:.78rem;cursor:pointer}
-.m-btn.active{background:#0284c7;color:#fff}
+.mode-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}.m-btn{background:#0f141c;color:#94a3b8;border:1px solid #334155;padding:9px 4px;border-radius:10px;font-weight:800;font-size:.78rem;cursor:pointer}.m-btn.active{background:#0284c7;color:#fff}
 .shooter-select{width:100%;padding:10px;border-radius:11px;background:#0f141c;color:#fff;border:1px solid #38bdf8;font-size:16px;font-weight:700;margin-bottom:9px}
 .scoreboard{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#0f141c;padding:9px;border-radius:11px;margin-bottom:9px}
-.duel-board{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.duel-card{background:#0f141c;border:2px solid #2c3a4f;border-radius:11px;padding:8px}
-.duel-card.turn{border-color:#ffd500}
+.duel-board{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.duel-card{background:#0f141c;border:2px solid #2c3a4f;border-radius:11px;padding:8px}.duel-card.turn{border-color:#ffd500}
 .duel-name{width:100%;background:transparent;border:none;border-bottom:1px dashed #334155;color:#fff;text-align:center;font-weight:800;font-size:16px;margin-bottom:4px}
-.dots{display:flex;justify-content:center;gap:8px;margin:7px 0}
-.pitch{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;background:#14532d;border:3px solid #fff;border-radius:14px;padding:22px 8px;margin:10px 0;font-size:2.1rem}
-.shoot-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.shoot-btns button{background:#0284c7;color:#fff;padding:15px 6px;border-radius:11px;border:none;font-size:.95rem;font-weight:800;cursor:pointer}
-.hs-box{margin-top:14px;background:#0f141c;border:1px solid #2c3a4f;border-radius:12px;padding:11px;text-align:left}
-.hs-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
-.hs-save{background:#16a34a;color:#fff;border:none;border-radius:8px;padding:7px 11px;font-weight:800;font-size:.8rem;cursor:pointer}
-.hs-row{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid #1e293b;font-size:.84rem}
-.copy{text-align:center;font-size:.7rem;color:#64748b;margin-top:18px}
-.nav-bar{position:fixed;bottom:0;left:0;right:0;background:#18202c;border-top:1px solid #2c3a4f;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px 14px;z-index:100}
-.nav-item{background:none;border:none;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;font-weight:700;cursor:pointer}
-.nav-item span{font-size:1.35rem}
-.nav-item.active{color:#38bdf8}
-</style>
-</head>
-<body>
-<div class="header">
-  <div class="header-top">
-    <h1 id="title">⚽ Punkte-Tracker</h1>
-    <div style="display:flex;gap:6px">
-      <button class="icon-btn" id="snd-btn" onclick="toggleSound()">🔊 Ton</button>
-      <button class="icon-btn" id="rst-btn" onclick="resetAll()">↺ Reset</button>
-    </div>
-  </div>
-  <div class="badge-dev">⚡ App v1.6 • Developed by Sven Thevissen</div>
-  <div class="stats">
-    <div class="stat"><small>Gesamtwert</small><strong id="sum">0</strong></div>
-    <div class="stat"><small>Einträge</small><strong id="cnt" style="color:#38bdf8">0</strong></div>
-  </div>
-  <input class="search" id="q" oninput="render()" placeholder="🔍 Suchen & filtern...">
-</div>
-
-<div id="game-box">
-  <h2 style="font-size:1.12rem">🥅 Schulhof Elfmeter-Arena</h2>
-  <div class="mode-switch">
-    <button class="m-btn active" id="btn-solo" onclick="setGameType('solo')">🏆 Solo</button>
-    <button class="m-btn" id="btn-duel" onclick="setGameType('duel')">⚔️ 1 vs 1</button>
-    <button class="m-btn" id="btn-blitz" onclick="setGameType('blitz')">⚡ 30s Blitz</button>
-  </div>
-  <div id="solo-ui">
-    <select id="shooter" class="shooter-select"></select>
-    <div class="scoreboard">
-      <div><small style="color:#94a3b8">PUNKTE</small><div id="pts" style="color:#4cd97b;font-weight:800;font-size:1.15rem">0</div></div>
-      <div><small style="color:#94a3b8" id="lbl-2">SERIE</small><div id="streak" style="color:#ffd500;font-weight:800;font-size:1.15rem">0🔥</div></div>
-      <div><small style="color:#94a3b8">REKORD</small><div id="best" style="color:#38bdf8;font-weight:800;font-size:1.15rem">0</div></div>
-    </div>
-    <div class="dots" id="dots">⚪ ⚪ ⚪ ⚪ ⚪</div>
-  </div>
-  <div class="duel-board" id="duel-ui">
-    <div class="duel-card turn" id="p1-card">
-      <input class="duel-name" id="p1-name" value="Spieler 1">
-      <div id="p1-score" style="font-size:1.35rem;font-weight:900;color:#4cd97b">0</div>
-      <div id="p1-dots" style="font-size:.82rem;margin-top:3px">⚪⚪⚪⚪⚪</div>
-    </div>
-    <div class="duel-card" id="p2-card">
-      <input class="duel-name" id="p2-name" value="Spieler 2">
-      <div id="p2-score" style="font-size:1.35rem;font-weight:900;color:#4cd97b">0</div>
-      <div id="p2-dots" style="font-size:.82rem;margin-top:3px">⚪⚪⚪⚪⚪</div>
-    </div>
-  </div>
-  <div class="pitch" id="pitch"><div id="g0">🥅</div><div id="g1">🧤</div><div id="g2">🥅</div></div>
-  <div id="g-msg" style="font-weight:800;color:#ffd500;margin-bottom:12px;min-height:22px">Wähle deine Ecke!</div>
-  <div class="shoot-btns">
-    <button onclick="shoot(0)">⬅️ Links</button>
-    <button onclick="shoot(1)">⬆️ Mitte</button>
-    <button onclick="shoot(2)">➡️ Rechts</button>
-  </div>
-  <div class="hs-box" id="hs-panel">
-    <div class="hs-head"><strong style="font-size:.86rem;color:#38bdf8">🏆 Highscores (Top 5)</strong><button class="hs-save" id="hs-btn" onclick="saveScore()">+ Score sichern</button></div>
-    <div id="hs-list"></div>
-  </div>
-</div>
-
-<div id="list"></div>
-
-<div class="add-box" id="add-box">
-  <strong style="font-size:.92rem;color:#bae6fd">+ Neuer Eintrag</strong>
-  <input type="text" id="p-name" placeholder="Name / Bezeichnung">
-  <input type="text" id="p-club" placeholder="Verein / Kategorie / Notiz">
-  <input type="number" id="p-val" placeholder="Punkte / Wert" step="10">
-  <button class="add-btn" onclick="addPlayer()">Speichern</button>
-</div>
-
-<div class="copy">© 2026 Sven Thevissen • v1.6</div>
-
-<nav class="nav-bar">
-  <button class="nav-item active" id="nav-sport" onclick="setMode('sport')"><span>⚽</span>Fußball</button>
-  <button class="nav-item" id="nav-immo" onclick="setMode('immo')"><span>🏠</span>Immo</button>
-  <button class="nav-item" id="nav-shop" onclick="setMode('shop')"><span>🛒</span>Shop</button>
-  <button class="nav-item" id="nav-game" onclick="openGame()"><span>🎮</span>Elfmeter</button>
-</nav>
-
+.dots{display:flex;justify-content:center;gap:8px;margin:7px 0}.pitch{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;background:#14532d;border:3px solid #fff;border-radius:14px;padding:22px 8px;margin:10px 0;font-size:2.1rem}
+.shoot-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.shoot-btns button{background:#0284c7;color:#fff;padding:15px 6px;border-radius:11px;border:none;font-size:.95rem;font-weight:800;cursor:pointer}
+.hs-box{margin-top:14px;background:#0f141c;border:1px solid #2c3a4f;border-radius:12px;padding:11px;text-align:left}.hs-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.hs-save{background:#16a34a;color:#fff;border:none;border-radius:8px;padding:7px 11px;font-weight:800;font-size:.8rem;cursor:pointer}.hs-row{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid #1e293b;font-size:.84rem}
+.copy{text-align:center;font-size:.7rem;color:#64748b;margin-top:18px}.nav-bar{position:fixed;bottom:0;left:0;right:0;background:#18202c;border-top:1px solid #2c3a4f;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px 14px;z-index:100}.nav-item{background:none;border:none;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;font-weight:700;cursor:pointer}.nav-item span{font-size:1.35rem}.nav-item.active{color:#38bdf8}
+</style></head><body>
+<div class="header"><div class="header-top"><h1 id="title">⚽ Spieler-Punkte</h1><div style="display:flex;gap:6px"><button class="icon-btn" id="snd-btn" onclick="toggleSound()">🔊 Ton</button><button class="icon-btn" id="rst-btn" onclick="resetAll()">↺ Reset</button></div></div><div class="badge-dev">⚡ App v1.7 • Developed by Sven Thevissen</div><div class="stats"><div class="stat"><small>Gesamtwert</small><strong id="sum">0</strong></div><div class="stat"><small>Einträge</small><strong id="cnt" style="color:#38bdf8">0</strong></div></div><input class="search" id="q" oninput="render()" placeholder="🔍 Suchen & filtern..."></div>
+<div id="game-box"><h2 style="font-size:1.12rem">🥅 Schulhof Elfmeter-Arena</h2><div class="mode-switch"><button class="m-btn active" id="btn-solo" onclick="setGameType('solo')">🏆 Solo</button><button class="m-btn" id="btn-duel" onclick="setGameType('duel')">⚔️ 1 vs 1</button><button class="m-btn" id="btn-blitz" onclick="setGameType('blitz')">⚡ 30s Blitz</button></div><div id="solo-ui"><select id="shooter" class="shooter-select"></select><div class="scoreboard"><div><small style="color:#94a3b8">PUNKTE</small><div id="pts" style="color:#4cd97b;font-weight:800;font-size:1.15rem">0</div></div><div><small style="color:#94a3b8" id="lbl-2">SERIE</small><div id="streak" style="color:#ffd500;font-weight:800;font-size:1.15rem">0🔥</div></div><div><small style="color:#94a3b8">REKORD</small><div id="best" style="color:#38bdf8;font-weight:800;font-size:1.15rem">0</div></div></div><div class="dots" id="dots">⚪ ⚪ ⚪ ⚪ ⚪</div></div><div class="duel-board" id="duel-ui"><div class="duel-card turn" id="p1-card"><input class="duel-name" id="p1-name" value="Spieler 1"><div id="p1-score" style="font-size:1.35rem;font-weight:900;color:#4cd97b">0</div><div id="p1-dots" style="font-size:.82rem;margin-top:3px">⚪⚪⚪⚪⚪</div></div><div class="duel-card" id="p2-card"><input class="duel-name" id="p2-name" value="Spieler 2"><div id="p2-score" style="font-size:1.35rem;font-weight:900;color:#4cd97b">0</div><div id="p2-dots" style="font-size:.82rem;margin-top:3px">⚪⚪⚪⚪⚪</div></div></div><div class="pitch" id="pitch"><div id="g0">🥅</div><div id="g1">🧤</div><div id="g2">🥅</div></div><div id="g-msg" style="font-weight:800;color:#ffd500;margin-bottom:12px;min-height:22px">Wähle deine Ecke!</div><div class="shoot-btns"><button onclick="shoot(0)">⬅️ Links</button><button onclick="shoot(1)">⬆️ Mitte</button><button onclick="shoot(2)">➡️ Rechts</button></div><div class="hs-box" id="hs-panel"><div class="hs-head"><strong style="font-size:.86rem;color:#38bdf8">🏆 Highscores (Top 5)</strong><button class="hs-save" id="hs-btn" onclick="saveScore()">+ Score sichern</button></div><div id="hs-list"></div></div></div>
+<div id="list"></div><div class="add-box" id="add-box"><strong style="font-size:.92rem;color:#bae6fd">+ Neuer Eintrag</strong><input type="text" id="p-name" placeholder="Name / Bezeichnung"><input type="text" id="p-club" placeholder="Verein / Kategorie / Notiz"><input type="number" id="p-val" placeholder="Punkte / Wert" step="10"><button class="add-btn" onclick="addPlayer()">Speichern</button></div><div class="copy">© 2026 Sven Thevissen • v1.7</div><nav class="nav-bar"><button class="nav-item active" id="nav-sport" onclick="setMode('sport')"><span>⚽</span>Fußball</button><button class="nav-item" id="nav-immo" onclick="setMode('immo')"><span>🏠</span>Immo</button><button class="nav-item" id="nav-shop" onclick="setMode('shop')"><span>🛒</span>Shop</button><button class="nav-item" id="nav-game" onclick="openGame()"><span>🎮</span>Elfmeter</button></nav>
 <script>
-const presets = {
-  sport: { title: "⚽ Spieler-Punkte", unit: "Pkt.", step: 50, items: [
-    { name: "Lamine Yamal", club: "FC Barcelona", val: 500 },
-    { name: "Jamal Musiala", club: "FC Bayern München", val: 450 },
-    { name: "Florian Wirtz", club: "Bayer 04 Leverkusen", val: 450 }
-  ]},
-  immo: { title: "🏠 Immobilien", unit: "Tsd. €", step: 10, items: [
-    { name: "3-Zi. Wohnung List", club: "Hannover • 88 m²", val: 345 },
-    { name: "Reihenhaus Kirchrode", club: "Hannover • 125 m²", val: 490 }
-  ]},
-  shop: { title: "🛒 Sortiment", unit: "€", step: 1, items: [
-    { name: "Kaffeebohnen 1kg", club: "Lager: 120 Stk.", val: 14 },
-    { name: "Bio-Weidebutter", club: "Kühlregal", val: 3 }
-  ]}
-};
-
-let mode = localStorage.getItem("pro_mode") || "sport";
-if (!presets[mode]) mode = "sport";
-  let list = JSON.parse(localStorage.getItem("pro_data_v11_" + mode) || "null") || JSON.parse(JSON.stringify(presets[mode].items));
-let highscores = JSON.parse(localStorage.getItem("pro_hs_v11") || "[]");
-let gameType = "solo", sessionPts = 0, streak = 0, round = [], rst = false, soundOn = true, ac = null, blitzTimer = null, timeLeft = 30;
-let duel = { turn: 1, p1: [], p2: [], s1: 0, s2: 0 };
-
-function getBestScore() {
-  return highscores.reduce((max, item) => Math.max(max, item.pts || 0), 0);
-}
-
-function beep(t) {
-  if (!soundOn) return;
-  try {
-    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-    if (ac.state === "suspended") ac.resume();
-    const o = ac.createOscillator(), g = ac.createGain();
-    o.connect(g); g.connect(ac.destination);
-    o.frequency.value = t === "goal" ? 660 : 140;
-    g.gain.value = 0.25;
-    o.start(); o.stop(ac.currentTime + 0.22);
-  } catch (e) {}
-}
-
-function toggleSound() {
-  soundOn = !soundOn;
-  document.getElementById("snd-btn").textContent = soundOn ? "🔊 Ton" : "🔇 Stumm";
-  if (soundOn) beep("goal");
-}
-
-function setNav(id) {
-  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-  const el = document.getElementById("nav-" + id);
-  if (el) el.classList.add("active");
-}
-
-function setMode(m) {
-  clearInterval(blitzTimer); blitzTimer = null;
-  mode = m;
-  localStorage.setItem("pro_mode", m);
-  list = JSON.parse(localStorage.getItem("pro_data_v11_" + mode) || "null") || JSON.parse(JSON.stringify(presets[mode].items));
-  document.getElementById("list").style.display = "block";
-  document.getElementById("add-box").style.display = "flex";
-  document.getElementById("q").style.display = "block";
-  document.getElementById("game-box").style.display = "none";
-  setNav(m);
-  render();
-}
-
-function openGame() {
-  if (mode !== "sport") setMode("sport");
-  setNav("game");
-  document.getElementById("list").style.display = "none";
-  document.getElementById("add-box").style.display = "none";
-  document.getElementById("q").style.display = "none";
-  document.getElementById("game-box").style.display = "block";
-  updateShooters();
-  renderHS();
-}
-
-function setGameType(t) {
-  clearInterval(blitzTimer); blitzTimer = null;
-  gameType = t;
-  ["solo", "duel", "blitz"].forEach(x => document.getElementById("btn-" + x).classList.toggle("active", t === x));
-  document.getElementById("solo-ui").style.display = t === "duel" ? "none" : "block";
-  document.getElementById("hs-panel").style.display = t === "duel" ? "none" : "block";
-  document.getElementById("duel-ui").style.display = t === "duel" ? "grid" : "none";
-  document.getElementById("dots").style.display = t === "solo" ? "flex" : "none";
-  document.getElementById("lbl-2").textContent = t === "blitz" ? "ZEIT" : "SERIE";
-  sessionPts = 0; streak = 0; round = [];
-  document.getElementById("pts").textContent = "0";
-  if (t === "duel") {
-    duel = { turn: 1, p1: [], p2: [], s1: 0, s2: 0 };
-    updateDuelUI();
-    document.getElementById("g-msg").textContent = (document.getElementById("p1-name").value || "Spieler 1") + " beginnt!";
-  } else if (t === "blitz") {
-    timeLeft = 30;
-    document.getElementById("streak").textContent = "30s⏱️";
-    document.getElementById("g-msg").textContent = "30s Blitz! Schieß los!";
-  } else {
-    document.getElementById("streak").textContent = "0🔥";
-    document.getElementById("g-msg").textContent = "Wähle deine Ecke!";
-  }
-}
-
-function startBlitz() {
-  if (blitzTimer) return;
-  timeLeft = 30;
-  blitzTimer = setInterval(() => {
-    timeLeft--;
-    document.getElementById("streak").textContent = timeLeft + "s⏱️";
-    if (timeLeft <= 0) {
-      clearInterval(blitzTimer); blitzTimer = null;
-      beep("save");
-      document.getElementById("g-msg").textContent = "⏰ ZEIT UM! " + sessionPts + " Pkt. – Score sichern!";
-    }
-  }, 1000);
-}
-
-function updateDuelUI() {
-  const f = a => [...a, ...Array(Math.max(0, 5 - a.length)).fill("⚪")].join("");
-  document.getElementById("p1-score").textContent = duel.s1;
-  document.getElementById("p2-score").textContent = duel.s2;
-  document.getElementById("p1-dots").textContent = f(duel.p1);
-  document.getElementById("p2-dots").textContent = f(duel.p2);
-  document.getElementById("p1-card").classList.toggle("turn", duel.turn === 1);
-  document.getElementById("p2-card").classList.toggle("turn", duel.turn === 2);
-}
-
-function updateShooters() {
-  document.getElementById("shooter").innerHTML = list.map((p, i) => "<option value='" + i + "'>Schütze: " + p.name + " (" + p.val + " Pkt.)</option>").join("");
-}
-
-function updateDots() {
-  const a = [...round];
-  while (a.length < 5) a.push("⚪");
-  document.getElementById("dots").textContent = a.join(" ");
-}
-
-function shoot(d) {
-  if (gameType === "blitz") {
-    if (timeLeft <= 0) setGameType("blitz");
-    startBlitz();
-  }
-  const k = Math.floor(Math.random() * 3);
-  for (let i = 0; i < 3; i++) document.getElementById("g" + i).textContent = i === k ? "🧤" : "🥅";
-  const goal = d !== k;
-  document.getElementById("g" + d).textContent = goal ? "⚽" : "❌";
-  beep(goal ? "goal" : "save");
-  if (navigator.vibrate) navigator.vibrate(goal ? 80 : 160);
-
-  if (gameType === "duel") {
-    const n1 = document.getElementById("p1-name").value || "Spieler 1";
-    const n2 = document.getElementById("p2-name").value || "Spieler 2";
-    if (duel.p1.length >= 5 && duel.p2.length >= 5 && duel.s1 !== duel.s2) {
-      duel = { turn: 1, p1: [], p2: [], s1: 0, s2: 0 };
-    }
-    if (duel.turn === 1) {
-      duel.p1.push(goal ? "🟢" : "🔴");
-      if (goal) duel.s1 += 50;
-      duel.turn = 2;
-      document.getElementById("g-msg").textContent = (goal ? "TOOR " + n1 + "! " : "Gehalten! ") + "Jetzt " + n2 + "!";
-    } else {
-      duel.p2.push(goal ? "🟢" : "🔴");
-      if (goal) duel.s2 += 50;
-      duel.turn = 1;
-      if (duel.p2.length >= 5) {
-        if (duel.s1 === duel.s2) {
-          document.getElementById("g-msg").textContent = "⚡ SUDDEN DEATH! (" + duel.s1 + ":" + duel.s2 + ") – " + n1 + "!";
-        } else {
-          const w = duel.s1 > duel.s2 ? "🏆 " + n1.toUpperCase() + " SIEGT!" : "🏆 " + n2.toUpperCase() + " SIEGT!";
-          document.getElementById("g-msg").textContent = w + " (" + duel.s1 + ":" + duel.s2 + ")";
-        }
-      } else {
-        document.getElementById("g-msg").textContent = (goal ? "TOOR " + n2 + "! " : "Gehalten! ") + "Jetzt " + n1 + "!";
-      }
-    }
-    updateDuelUI();
-    return;
-  }
-
-  if (round.length >= 5) round = [];
-  const idx = parseInt(document.getElementById("shooter").value) || 0;
-  if (!goal) {
-    streak = 0;
-    round.push("🔴");
-    document.getElementById("g-msg").textContent = "Gehalten!";
-  } else {
-    streak++;
-    round.push("🟢");
-    const g = (gameType === "solo" && streak % 3 === 0) ? 150 : 50;
-    sessionPts += g;
-    const target = list.at(idx);
-    if (target) {
-      target.val = +(target.val + g).toFixed(1);
-      render(true);
-      updateShooters();
-      document.getElementById("shooter").value = idx;
-      document.getElementById("g-msg").textContent = "TOOOOR! +" + g + " Pkt. → " + target.name;
-    }
-  }
-  if (gameType === "solo") {
-    updateDots();
-    document.getElementById("streak").textContent = streak + "🔥";
-  }
-  document.getElementById("pts").textContent = sessionPts;
-  document.getElementById("best").textContent = Math.max(sessionPts, getBestScore());
-}
-
-function saveScore() {
-  if (sessionPts <= 0) return;
-  const idx = parseInt(document.getElementById("shooter").value) || 0;
-  const target = list.at(idx);
-  const name = target ? target.name : "Sven";
-  const now = new Date().toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
-  highscores.push({ name, pts: sessionPts, date: now });
-  highscores.sort((a, b) => b.pts - a.pts);
-  highscores = highscores.slice(0, 5);
-  localStorage.setItem("pro_hs_v11", JSON.stringify(highscores));
-  sessionPts = 0; streak = 0; round = [];
-  document.getElementById("pts").textContent = "0";
-  if (gameType === "solo") {
-    document.getElementById("streak").textContent = "0🔥";
-    updateDots();
-  }
-  renderHS();
-}
-
-function renderHS() {
-  document.getElementById("best").textContent = Math.max(sessionPts, getBestScore());
-  const el = document.getElementById("hs-list");
-  if (!highscores.length) {
-    el.innerHTML = "<div style='color:#64748b;font-size:.82rem'>Schieß Tore und tippe auf + Score sichern!</div>";
-    return;
-  }
-  const m = ["🥇", "🥈", "🥉", "4.", "5."];
-  el.innerHTML = highscores.map((h, i) => "<div class='hs-row'><span>" + m.at(i) + " <strong>" + h.name + "</strong> <small style='color:#64748b'>(" + h.date + ")</small></span><span style='color:#4cd97b;font-weight:800'>" + h.pts + " Pkt.</span></div>").join("");
-}
-
-function render(kg = false) {
-  const cfg = presets[mode];
-  document.getElementById("title").textContent = cfg.title;
-  if (!kg) setNav(mode);
-  localStorage.setItem("pro_data_v11_" + mode, JSON.stringify(list));
-  const q = document.getElementById("q").value.toLowerCase();
-  const sorted = [...list].sort((a, b) => b.val - a.val);
-  const fil = sorted.filter(p => p.name.toLowerCase().includes(q) || (p.club || "").toLowerCase().includes(q));
-  const sum = list.reduce((s, p) => s + p.val, 0);
-  document.getElementById("sum").textContent = sum.toFixed(1).replace(".0", "") + " " + cfg.unit;
-  document.getElementById("cnt").textContent = list.length;
-  const m = ["🥇", "🥈", "🥉"];
-  document.getElementById("list").innerHTML = fil.map(p => {
-    const idx = list.indexOf(p), r = sorted.indexOf(p);
-
+const presets={sport:{title:"⚽ Spieler-Punkte",unit:"Pkt.",step:50,items:[{name:"Lamine Yamal",club:"FC Barcelona",val:500},{name:"Jamal Musiala",club:"FC Bayern München",val:450},{name:"Florian Wirtz",club:"Bayer 04 Leverkusen",val:450}]},immo:{title:"🏠 Immobilien",unit:"Tsd. €",step:10,items:[{name:"3-Zi. Wohnung List",club:"Hannover • 88 m²",val:345},{name:"Reihenhaus Kirchrode",club:"Hannover • 125 m²",val:490}]},shop:{title:"🛒 Sortiment",unit:"€",step:1,items:[{name:"Kaffeebohnen 1kg",club:"Lager: 120 Stk.",val:14},{name:"Bio-Weidebutter",club:"Kühlregal",val:3}]}};
+let mode=localStorage.getItem("pro_mode")||"sport";if(!presets[mode])mode="sport";
+let list=JSON.parse(localStorage.getItem("pro_data_v12_"+mode)||"null")||JSON.parse(JSON.stringify(presets[mode].items));
+let highscores=JSON.parse(localStorage.getItem("pro_hs_v12")||"[]");
+let gameType="solo",sessionPts=0,streak=0,round=[],rst=false,soundOn=true,ac=null,blitzTimer=null,timeLeft=30,duel={turn:1,p1:[],p2:[],s1:0,s2:0};
+function getBest(){return highscores.reduce((m,x)=>Math.max(m,x.pts||0),0)}
+function beep(t){if(!soundOn)return;try{if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=t==="goal"?660:140;g.gain.value=.25;o.start();o.stop(ac.currentTime+.22)}catch(e){}}
+function toggleSound(){soundOn=!soundOn;document.getElementById("snd-btn").textContent=soundOn?"🔊 Ton":"🔇 Stumm";if(soundOn)beep("goal")}
+function setNav(id){document.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));const e=document.getElementById("nav-"+id);if(e)e.classList.add("active")}
+function setMode(m){clearInterval(blitzTimer);blitzTimer=null;mode=m;localStorage.setItem("pro_mode",m);list=JSON.parse(localStorage.getItem("pro_data_v12_"+mode)||"null")||JSON.parse(JSON.stringify(presets[mode].items));document.getElementById("list").style.display="block";document.getElementById("add-box").style.display="flex";document.getElementById("q").style.display="block";document.getElementById("game-box").style.display="none";setNav(m);render()}
+function openGame(){if(mode!=="sport")setMode("sport");setNav("game");document.getElementById("list").style.display="none";document.getElementById("add-box").style.display="none";document.getElementById("q").style.display="none";document.getElementById("game-box").style.display="block";updateShooters();renderHS()}
+function setGameType(t){clearInterval(blitzTimer);blitzTimer=null;gameType=t;["solo","duel","blitz"].forEach(x=>document.getElementById("btn-"+x).classList.toggle("active",t===x));document.getElementById("solo-ui").style.display=t==="duel"?"none":"block";document.getElementById("hs-panel").style.display=t==="duel"?"none":"block";document.getElementById("duel-ui").style.display=t==="duel"?"grid":"none";document.getElementById("dots").style.display=t==="solo"?"flex":"none";document.getElementById("lbl-2").textContent=t==="blitz"?"ZEIT":"SERIE";sessionPts=0;streak=0;round=[];document.getElementById("pts").textContent="0";if(t==="duel"){duel={turn:1,p1:[],p2:[],s1:0,s2:0};updateDuelUI();document.getElementById("g-msg").textContent=(document.getElementById("p1-name").value||"Spieler 1")+" beginnt!"}else if(t==="blitz"){timeLeft=30;document.getElementById("streak").textContent="30s⏱️";document.getElementById("g-msg").textContent="30s Blitz! Schieß los!"}else{document.getElementById("streak").textContent="0🔥";document.getElementById("g-msg").textContent="Wähle deine Ecke!"}}
+function startBlitz(){if(blitzTimer)return;timeLeft=30;blitzTimer=setInterval(()=>{timeLeft--;document.getElementById("streak").textContent=timeLeft+"s⏱️";if(timeLeft<=0){clearInterval(blitzTimer);blitzTimer=null;beep("save");document.getElementById("g-msg").textContent="⏰ ZEIT UM! "+sessionPts+" Pkt. – Score sichern!"}},1000)}
+function updateDuelUI(){const f=a=>[...a,...Array(Math.max(0,5-a.length)).fill("⚪")].join("");document.getElementById("p1-score").textContent=duel.s1;document.getElementById("p2-score").textContent=duel.s2;document.getElementById("p1-dots").textContent=f(duel.p1);document.getElementById("p2-dots").textContent=f(duel.p2);document.getElementById("p1-card").classList.toggle("turn",duel.turn===1);document.getElementById("p2-card").classList.toggle("turn",duel.turn===2)}
+function updateShooters(){document.getElementById("shooter").innerHTML=list.map((p,i)=>"<option value='"+i+"'>Schütze: "+p.name+" ("+p.val+" Pkt.)</option>").join("")}
+function updateDots(){const a=[...round];while(a.length<5)a.push("⚪");document.getElementById("dots").textContent=a.join(" ")}
+function shoot(d){if(gameType==="blitz"){if(timeLeft<=0)setGameType("blitz");startBlitz()}const k=Math.floor(Math.random()*3);for(let i=0;i<3;i++)document.getElementById("g"+i).textContent=i===k?"🧤":"🥅";const goal=d!==k;document.getElementById("g"+d).textContent=goal?"⚽":"❌";beep(goal?"goal":"save");if(navigator.vibrate)navigator.vibrate(goal?80:160);if(gameType==="duel"){const n1=document.getElementById("p1-name").value||"Spieler 1",n2=document.getElementById("p2-name").value||"Spieler 2";if(duel.p1.length>=5&&duel.p2.length>=5&&duel.s1!==duel.s2)duel={turn:1,p1:[],p2:[],s1:0,s2:0};if(duel.turn===1){duel.p1.push(goal?"🟢":"🔴");if(goal)duel.s1+=50;duel.turn=2;document.getElementById("g-msg").textContent=(goal?"TOOR "+n1+"! ":"Gehalten! ")+"Jetzt "+n2+"!"}else{duel.p2.push(goal?"🟢":"🔴");if(goal)duel.s2+=50;duel.turn=1;if(duel.p2.length>=5){if(duel.s1===duel.s2)document.getElementById("g-msg").textContent="⚡ SUDDEN DEATH! ("+duel.s1+":"+duel.s2+") – "+n1+"!";else document.getElementById("g-msg").textContent=(duel.s1>duel.s2?"🏆 "+n1.toUpperCase()+" SIEGT!":"🏆 "+n2.toUpperCase()+" SIEGT!")+" ("+duel.s1+":"+duel.s2+")"}else document.getElementById("g-msg").textContent=(goal?"TOOR "+n2+"! ":"Gehalten! ")+"Jetzt "+n1+"!"}updateDuelUI();return}if(round.length>=5)round=[];const idx=parseInt(document.getElementById("shooter").value)||0;if(!goal){streak=0;round.push("🔴");document.getElementById("g-msg").textContent="Gehalten!"}else{streak++;round.push("🟢");const g=(gameType==="solo"&&streak%3===0)?150:50;sessionPts+=g;const t=list.at(idx);if(t){t.val=+(t.val+g).toFixed(1);render(true);updateShooters();document.getElementById("shooter").value=idx;document.getElementById("g-msg").textContent="TOOOOR! +"+g+" Pkt. → "+t.name}}if(gameType==="solo"){updateDots();document.getElementById("streak").textContent=streak+"🔥"}document.getElementById("pts").textContent=sessionPts;document.getElementById("best").textContent=Math.max(sessionPts,getBest())}
+function saveScore(){if(sessionPts<=0)return;const idx=parseInt(document.getElementById("shooter").value)||0,t=list.at(idx),name=t?t.name:"Sven",now=new Date().toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit"});highscores.push({name,pts:sessionPts,date:now});highscores.sort((a,b)=>b.pts-a.pts);highscores=highscores.slice(0,5);localStorage.setItem("pro_hs_v12",JSON.stringify(highscores));sessionPts=0;streak=0;round=[];document.getElementById("pts").textContent="0";if(gameType==="solo"){document.getElementById("streak").textContent="0🔥";updateDots()}renderHS()}
+function renderHS(){document.getElementById("best").textContent=Math.max(sessionPts,getBest());const el=document.getElementById("hs-list");if(!highscores.length){el.innerHTML="<div style='color:#64748b;font-size:.82rem'>Schieß Tore und tippe auf + Score sichern!</div>";return}const m=["🥇","🥈","🥉","4.","5."];el.innerHTML=highscores.map((h,i)=>"<div class='hs-row'><span>"+m.at(i)+" <strong>"+h.name+"</strong> <small style='color:#64748b'>("+h.date+")</small></span><span style='color:#4cd97b;font-weight:800'>"+h.pts+" Pkt.</span></div>").join("")}
+function render(kg=false){const cfg=presets[mode];document.getElementById("title").textContent=cfg.title;if(!kg)setNav(mode);localStorage.setItem("pro_data_v12_"+mode,JSON.stringify(list));const q=document.getElementById("q").value.toLowerCase(),sorted=[...list].sort((a,b)=>b.val-a.val),fil=sorted.filter(p=>p.name.toLowerCase().includes(q)||(p.club||"").toLowerCase().includes(q)),sum=list.reduce((s,p)=>s+p.val,0);document.getElementById("sum").textContent=sum.toFixed(1).replace(".0","")+" "+cfg.unit;document.getElementById("cnt").textContent=list.length;const m=["🥇","🥈","🥉"];document.getElementById("list").innerHTML=fil.map(p=>{const idx=list.indexOf(p),r=sorted.indexOf(p);return"<div class='card'><div class='left'><span class='rank'>"+(m.at(r)||"#"+(r+1))+"</span><div class='info'><div class='name'>"+p.name+"</div><div class='sub'>"+(p.club||"Allgemein")+"</div><div class='val'>"+p.val+" "+cfg.unit+"</div></div></div><div class='btns'><button class='btn plus' onclick='chg("+idx+","+cfg.step+")'>+"+cfg.step+"</button><button class='btn minus' onclick='chg("+idx+",-"+cfg.step+")'>-"+cfg.step+"</button><button class='btn edit' onclick='editMenu("+idx+")'>•••</button></div></div>"}).join("")}
+function chg(i,d){const x=list.at(i);if(!x)return;x.val=Math.max(0,+(x.val+d).toFixed(1));render()}
+function editMenu(i){const x=list.at(i);if(!x)return;const a=prompt(x.name+" - Neuer Wert oder L:",x.val);if(a===null)return;if(a.trim().toUpperCase()==="L")list.splice(i,1);else if(!isNaN(parseFloat(a)))x.val=Math.max(0,parseFloat(a));render()}
+function resetAll(){const b=document.getElementById("rst-btn");if(!rst){rst=true;b.textContent="⚠️ Sicher?";b.style.background="#dc2626";b.style.color="#fff";setTimeout(()=>{rst=false;b.textContent="↺ Reset";b.style.background="";b.style.color=""},3000);return}rst=false;list=JSON.parse(JSON.stringify(presets[mode].items));localStorage.removeItem("pro_data_v12_"+mode);render();b.textContent="✅ Erledigt";b.style.background="#16a34a";b.style.color="#fff";setTimeout(()=>{b.textContent="↺ Reset";b.style.background="";b.style.color=""},1500)}
+function addPlayer(){const n=document.getElementById("p-name").value.trim(),c=document.getElementById("p-club").value.trim(),v=parseFloat(document.getElementById("p-val").value);if(!n||isNaN(v))return;list.push({name:n,club:c||"Eintrag",val:v});document.getElementById("p-name").value="";document.getElementById("p-club").value="";document.getElementById("p-val").value="";render()}
+render();
+</script></body></html>
